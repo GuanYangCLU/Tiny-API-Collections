@@ -1,19 +1,31 @@
 // Challenge: Think about optimizing and refactoring
 // Cannot have two consistent routes
-let input = [
-    'HIVE/mr-compute-prod/default.abc',
-    'HIVE/mr-compute-prod/defaultRM.abc',
-    'HIVE/mr-storage-prod/default.accounts_quota_sl_join',
-    'Hadoop/mr-storage-prod/default.al_account_groomer_status_secondary'
-];
+
+// let input = [
+//     'HIVE/mr-compute-prod/default.abc',
+//     'HIVE/mr-compute-prod/defaultRM.abc',
+//     'HIVE/mr-storage-prod/default.accounts_quota_sl_join',
+//     'Hadoop/mr-storage-prod/default.al_account_groomer_status_secondary'
+// ];
+let input = 
+   [
+       "HIVE/mr-compute-prod/tmp",
+       "HIVE/mr-compute-prod/test",
+       "HIVE/mr-compute-prod/bn",
+       "HIVE/mr-compute-prod/ops",
+       "HIVE/mr-storage-prod/tmp",
+       "HIVE/mr-storage-prod/test"
+     ]
 
 // Process the input
 const strToArray = input => {
-    return input.map(str => str.split('/'));
+    // if there are consistant routes, only keep one
+    // then don't need check in final level
+    return Array.from(new Set(input)).map(str => str.split('/'));
 }
 
 let op1 = strToArray(input);
-// console.log(op1);
+console.log(op1);
 
 class Node {
     constructor(path){
@@ -42,12 +54,8 @@ const storeNode = (inputItem, routes, level, curLv, newFlag) => {
     // if (!routes) routes = [];
     if (curLv === MAX_LEVEL) {
         let node = new LeafNode(inputItem[curLv]);        
-        const idx = level[curLv].indexOf(inputItem[curLv]);        
-        if (idx === -1) {
-            // no this path found in this level
-            routes.push(node);
-            level[curLv].push(inputItem[curLv]);
-        }
+        routes.push(node);
+        level[curLv].push(inputItem[curLv]);
         newFlag = false;
         return;
     } else {
@@ -81,7 +89,7 @@ console.log('rs: ');
 
 console.log(rts);
 console.log(rts[0].children);
-console.log(rts[1].children);
+// console.log(rts[1].children); // for example 1
 console.log(rts[0].children[0].children);
 console.log(rts[0].children[1].children);
-console.log(rts[1].children[0].children);
+// console.log(rts[1].children[0].children); // for example 1
